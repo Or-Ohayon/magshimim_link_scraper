@@ -5,23 +5,37 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchAttributeException
 
+#Change it to your own username/password.
+USERNAME = ""
+PASSWORD = ""
+
 
 coursesLinks = []
 subLessonLinks = []
 urlDictionary = {}
 driveLinks = []
+
+
+if(USERNAME == "" or PASSWORD == ""):
+        print("You forgot to configure your Username/Password in the python file!")
+        exit(0)
+
 driver = webdriver.Chrome()
 
-def login_to_website(username, password):
+def login_to_website():
+    driver.get("https://ilearn.cyber.org.il/")
+    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "userid")))
     u = driver.find_element(By.ID, 'userid')
-    u.send_keys(username)
+    u.send_keys(USERNAME)
     p = driver.find_element(By.ID, 'password')
-    p.send_keys(password)
+    p.send_keys(PASSWORD)
     p.send_keys(Keys.ENTER)
     driver.get('https://ilearn.cyber.org.il/user_dashboard')
+    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
 
 def get_all_courses():
     driver.get('https://ilearn.cyber.org.il/user/completed/')
+    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "mainContent")))
     elements = driver.find_elements(By.TAG_NAME, 'a')
     for element in elements:
         try:
@@ -36,6 +50,7 @@ def get_all_courses():
 def get_all_course_links(course_link):
     urlDictionary.clear()
     driver.get(course_link)
+    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "blockView")))
     driveLinks.append(" ------------------- " + get_course_title() + " ------------------")
     elems = driver.find_elements(By.XPATH, "//a[@href]")
     for element in elems:
@@ -56,6 +71,7 @@ def get_drive_from_lesson(link):
     links = []
     try:
         driver.get(link)
+        WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
         if len(subLessonLinks) == 0:
             get_sublessons()
         driveElement = driver.find_elements(By.TAG_NAME, 'a')
@@ -95,11 +111,7 @@ def save_to_file():
             txt_file.write(link + "\n")
 
 def main():
-    driver.get("https://ilearn.cyber.org.il/")
-
-    username = input("Enter Username: ")
-    password = input("Enter Password: ")
-    login_to_website(username, password)
+    login_to_website()
 
     get_all_courses()
     for link in coursesLinks:

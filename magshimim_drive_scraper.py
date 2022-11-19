@@ -24,18 +24,34 @@ driver = webdriver.Chrome()
 
 def login_to_website():
     driver.get("https://ilearn.cyber.org.il/")
-    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "userid")))
+    try:
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "userid")))
+    except:
+        print("Couldn't load website properly (user id)")
+        driver.quit()
+        exit(0)
     u = driver.find_element(By.ID, 'userid')
     u.send_keys(USERNAME)
     p = driver.find_element(By.ID, 'password')
     p.send_keys(PASSWORD)
     p.send_keys(Keys.ENTER)
     driver.get('https://ilearn.cyber.org.il/user_dashboard')
-    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
+    try:
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
+    except:
+        print("Couldn't load website properly (contentWrap)")
+        driver.quit()
+        exit(0)
+
 
 def get_all_courses():
     driver.get('https://ilearn.cyber.org.il/user/completed/')
-    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "mainContent")))
+    try:
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "mainContent")))
+    except:
+        print("Couldn't load website properly (mainContent)")
+        driver.quit()
+        exit(0)
     elements = driver.find_elements(By.TAG_NAME, 'a')
     for element in elements:
         try:
@@ -50,7 +66,12 @@ def get_all_courses():
 def get_all_course_links(course_link):
     urlDictionary.clear()
     driver.get(course_link)
-    WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "blockView")))
+    try:
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "sectionTitle")))
+    except:
+        print("Couldn't load website properly (sectionTitle)")
+        driver.quit()
+        exit(0)
     driveLinks.append(" ------------------- " + get_course_title() + " ------------------")
     elems = driver.find_elements(By.XPATH, "//a[@href]")
     for element in elems:
@@ -71,7 +92,13 @@ def get_drive_from_lesson(link):
     links = []
     try:
         driver.get(link)
-        WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
+        try:
+            WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
+        except:
+            print("Couldn't load website properly (contentWrap)")
+            driver.quit()
+            exit(0)
+
         if len(subLessonLinks) == 0:
             get_sublessons()
         driveElement = driver.find_elements(By.TAG_NAME, 'a')

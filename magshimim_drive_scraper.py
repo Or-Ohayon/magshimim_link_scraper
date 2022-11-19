@@ -25,7 +25,7 @@ driver = webdriver.Chrome()
 def login_to_website():
     driver.get("https://ilearn.cyber.org.il/")
     try:
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "userid")))
+        WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.ID, "userid")))
     except:
         print("Couldn't load website properly (user id)")
         driver.quit()
@@ -37,7 +37,7 @@ def login_to_website():
     p.send_keys(Keys.ENTER)
     driver.get('https://ilearn.cyber.org.il/user_dashboard')
     try:
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
+        WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.ID, "contentWrap")))
     except:
         print("Couldn't load website properly (contentWrap)")
         driver.quit()
@@ -47,7 +47,7 @@ def login_to_website():
 def get_all_courses():
     driver.get('https://ilearn.cyber.org.il/user/completed/')
     try:
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "mainContent")))
+        WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.ID, "mainContent")))
     except:
         print("Couldn't load website properly (mainContent)")
         driver.quit()
@@ -67,7 +67,7 @@ def get_all_course_links(course_link):
     urlDictionary.clear()
     driver.get(course_link)
     try:
-        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "sectionTitle")))
+        WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, "sectionTitle")))
     except:
         print("Couldn't load website properly (sectionTitle)")
         driver.quit()
@@ -93,7 +93,7 @@ def get_drive_from_lesson(link):
     try:
         driver.get(link)
         try:
-            WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "contentWrap")))
+            WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.ID, "contentWrap")))
         except:
             print("Couldn't load website properly (contentWrap)")
             driver.quit()
